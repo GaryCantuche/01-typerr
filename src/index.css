@@ -1,3 +1,13 @@
+:root {
+  --gray: #50514f;
+  --red: #f25f5c;
+  --yellow: #ffe066;
+  --blue: #247ba0;
+  --green: #70c1b3;
+  --letter-done: #04724d;
+  --letter-wrong: #9e2a2b;
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -5,15 +15,84 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: var(--gray) !important;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
-}
-
-#root{
+#root {
   width: 100%;
   display: flex;
   justify-content: center;
+}
+
+.App {
+  width: 75%;
+}
+
+.menu {
+  color: lightgray;
+}
+
+#text {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  font-family: 'Courier New', Courier, monospace !important;
+}
+
+.counters {
+  display: flex;
+  gap: 10px;
+  font-size: 32px;
+}
+
+#key-counter {
+  color: var(--green);
+}
+
+#errors-counter {
+  color: var(--letter-wrong);
+}
+
+.letter-done {
+  color: var(--green);
+}
+
+.letter-wrong {
+  color: var(--letter-wrong);
+}
+
+.word {
+  font-size: 24px;
+  color: gray;
+}
+
+.missed-word {
+  border-bottom: 1px solid var(--letter-wrong);
+}
+
+.letter {
+  position: relative;
+  &.active::before {
+    content: '|';
+    position: absolute;
+    left: -50%;
+    animation: 1s blink infinite ease-in-out;
+  }
+  &.active.is-last::before {
+    content: '|';
+    position: absolute;
+    left: 60%;
+    animation: 1s blink infinite ease-in-out;
+  }
+}
+
+@keyframes blink {
+  0%,
+  25% {
+    opacity: 1;
+  }
+
+  75% {
+    opacity: 0;
+  }
 }
