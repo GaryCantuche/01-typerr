@@ -142,13 +142,14 @@ const Text = props => {
     const $word = document.querySelectorAll('.word')
     $word.forEach(word => {
       word.classList.remove('missed-word')
-      word.querySelectorAll('.letter').forEach(letter => letter.classList.remove('letter-done', 'letter-wrong', 'active'))
+      word.querySelectorAll('.letter').forEach(letter => letter.classList.remove('letter-done', 'letter-wrong', 'active', 'is-last'))
     })
     // START
     $word[0].classList.add('active')
     $word[0].querySelector('.letter').classList.add('active')
     
     setNewGame(false)
+    setGameOver(false)
     setKeysCounter(0)
     setKeysErrors(0)
     setCurrentTime(initialTime)
@@ -195,6 +196,7 @@ const Text = props => {
         id='input'
         autoFocus
         readOnly={isGameOver ? true : false}
+        autocomplete="one-time-code"
       />
     </div>
   )

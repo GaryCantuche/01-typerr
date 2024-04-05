@@ -10,7 +10,7 @@ function Board () {
   const [isGameOver, setGameOver] = useState(false)
   const [keysCounter, setKeysCounter] = useState(0)
   const [keysErrors, setKeysErrors] = useState(0)
-  const [initialTime, setInitialTime] = useState(5)
+  const [initialTime, setInitialTime] = useState(30)
   const [wordsNumber, setWordsNumber] = useState(30)
   const [currentTime, setCurrentTime] = useState(initialTime)
 

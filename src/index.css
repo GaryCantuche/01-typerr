@@ -20,6 +20,12 @@ body {
   background-color: var(--gray) !important;
 }
 
+.pacifico-regular {
+  font-family: "Pacifico", cursive;
+  font-weight: 400;
+  font-style: normal;
+}
+
 #root {
   width: 100%;
   display: flex;
@@ -33,6 +39,9 @@ body {
 .menu {
   color: lightgray;
   margin-bottom: 5vh;
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
 }
 
 .configuration-bar {
@@ -76,9 +85,15 @@ body {
 #text {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-around;
   gap: 10px;
   font-family: 'Courier New', Courier, monospace !important;
+}
+
+#input {
+  position: absolute;
+  left: 0;
+  top:0;
+  opacity: 0;
 }
 
 .counters {
