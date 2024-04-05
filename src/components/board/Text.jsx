@@ -1,23 +1,41 @@
+import { useEffect, useContext, useRef } from 'react'
+import { BoardContext } from './Board'
 import wordsList from './../../assets/words/words.json'
-import { useState, useEffect } from 'react'
+import RestartButton from './../../assets/icons/restart.svg'
 
 const Text = props => {
-  const [$input, setInput] = useState(null)
-  const { isGameOver, setGameOver } = props
-  const { keysCounter, setKeysCounter } = props
-  const { keysErrors, setKeysErrors } = props
-
-  const [paragraph, setParagraph] = useState(
-    wordsList.words
-      .toSorted(() => Math.random() - 0.5)
-      .slice(0, 32)
-      .join(' ')
-  )
+  //const [$input, setInput] = useState(null)
+  const $input = useRef(null)
+  const { isGameOver, setGameOver } = useContext(BoardContext)
+  const { isNewGame, setNewGame } = useContext(BoardContext)
+  const { keysCounter, setKeysCounter } = useContext(BoardContext)
+  const { keysErrors, setKeysErrors } = useContext(BoardContext)
+  const { currentTime, setCurrentTime } = useContext(BoardContext)
+  const { initialTime } = useContext(BoardContext)
+  const { paragraph, wordsNumber } = useContext(BoardContext)
 
   useEffect(() => {
-    setInput(document.querySelector('#input'))
-    startGame()
-  }, [$input, paragraph])
+    $input.current = document.querySelector('#input')
+    if(isNewGame) {
+      startGame()
+    }
+  }, [isNewGame])
+
+  // Timer
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentTime(currentTime -1);
+    }, 1000)
+
+    if(currentTime === 0) {
+      clearInterval(interval);
+      setGameOver(true);
+    }
+
+    return () => {
+      clearInterval(interval)
+    }
+  }, [currentTime])
 
   const onKeyUp = event => {
     const { key } = event
@@ -27,11 +45,11 @@ const Text = props => {
     const $letters = $word.querySelectorAll('.letter')
     const $letter = $word.querySelector('.letter.active')
 
-    $input.maxLength = $letters.length
+    $input.current.maxLength = $letters.length
     $letters.forEach(letter =>
       letter.classList.remove('letter-done', 'letter-wrong', 'is-last')
     )
-    $input.value.split('').forEach((char, index) => {
+    $input.current.value.split('').forEach((char, index) => {
       const isCorrect = char === currentWord[index] ? true : false
       if (isCorrect) {
         $letters[index].classList.add('letter-done')
@@ -43,8 +61,8 @@ const Text = props => {
     })
 
     $letter.classList.remove('active', 'is-last')
-    if ($letters[$input.value.length]) {
-      $letters[$input.value.length].classList.add('active')
+    if ($letters[$input.current.value.length]) {
+      $letters[$input.current.value.length].classList.add('active')
     } else {
       $letter.classList.add('active', 'is-last')
     }
@@ -62,10 +80,10 @@ const Text = props => {
 
       //Check Missed word
       const word = $currentWord.innerText
-      if (word !== $input.value) {
+      if (word !== $input.current.value) {
         $currentWord.classList.add('missed-word')
       }
-      $input.value = ''
+      $input.current.value = ''
 
       //Go to next word
       const $nextWord = $currentWord.nextElementSibling
@@ -95,7 +113,7 @@ const Text = props => {
         $letterToGo.classList.add('active')
         $prevWord.classList.add('active')
         $prevWord.classList.remove('missed-word')
-        $input.value = [
+        $input.current.value = [
           ...$prevWord.querySelectorAll(
             '.letter.letter-done,.letter.letter-wrong'
           )
@@ -108,23 +126,48 @@ const Text = props => {
     }
   }
 
+  const newText = () => {
+    paragraph.current = wordsList.words
+      .toSorted(() => Math.random() - 0.5)
+      .slice(0, wordsNumber)
+      .join(' ')
+  }
+
   const startGame = () => {
-    if ($input) {
-      const $word = document.querySelector('.word')
-      $word.classList.add('active')
-      $word.querySelector('.letter').classList.add('active')
-    }
+    newText()
+    //CLEAN INPUT
+    $input.current.value = '';
+    $input.current.focus();
+    // GET ALL WORDS AND CLEAN CLASSES
+    const $word = document.querySelectorAll('.word')
+    $word.forEach(word => {
+      word.classList.remove('missed-word')
+      word.querySelectorAll('.letter').forEach(letter => letter.classList.remove('letter-done', 'letter-wrong', 'active'))
+    })
+    // START
+    $word[0].classList.add('active')
+    $word[0].querySelector('.letter').classList.add('active')
+    
+    setNewGame(false)
+    setKeysCounter(0)
+    setKeysErrors(0)
+    setCurrentTime(initialTime)
   }
 
   return (
     <div className='text-wrapper'>
       <div className='counters'>
-        <div id='key-counter'>{keysCounter}</div>
-        <div id='errors-counter'>{keysErrors}</div>
+        <div>
+          <time>{currentTime}</time>
+        </div>
+        <div className='word-counters'>
+          <div id='key-counter'>{keysCounter}</div>
+          <div id='errors-counter'>{keysErrors}</div>
+        </div>
       </div>
 
       <div id='text'>
-        {paragraph.split(' ').map((word, index) => {
+        {paragraph.current.split(' ').map((word, index) => {
           return (
             <span className='word' key={index}>
               {word.split('').map((letter, index) => {
@@ -137,6 +180,13 @@ const Text = props => {
             </span>
           )
         })}
+      </div>
+      <div className='restart-wrapper'>
+          <div className='restart-button'>
+            <button onClick={() => startGame()}>
+              <img src={RestartButton} alt='Restart Button'/>
+            </button>
+          </div>
       </div>
       <input
         onKeyUp={onKeyUp}
