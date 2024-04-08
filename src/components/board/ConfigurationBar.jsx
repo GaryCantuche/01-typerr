@@ -25,9 +25,11 @@ function ConfigurationBar () {
     setSelector(sel);
   }
 
+  console.log(selector);
+
   return (
     <div className='w-full sm:w-3/4 lg:w-8/12 flex justify-center gap-2 p-2 bg-configuration-back text-configuration-buttons rounded-xl shadow m-auto'>
-      <div className={`${selector !== SELECTOR_TYPES[0] ? 'opacity-50' : 'opacity-100'} transition ease-in-out duration-300 hover:text-configuration-buttons opacity-50 hover:opacity-100`}>
+      <div className={`${selector !== SELECTOR_TYPES[0] ? 'opacity-50' : 'opacity-100'} transition ease-in-out duration-300 hover:text-configuration-buttons hover:opacity-100`}>
         <button
           className="flex gap-1 justify-center items-center outline-none border-none middle none center flex items-center justify-center rounded-lg p-1 transition-all disabled:pointer-events-none"
           data-ripple-light="true"
@@ -42,7 +44,7 @@ function ConfigurationBar () {
         Time
         </button>
       </div>
-      <div className={`${selector !== SELECTOR_TYPES[1] ? 'opacity-50' : 'opacity-100'} transition ease-in-out duration-300 hover:text-configuration-buttons opacity-50 hover:opacity-100`}>
+      <div className={`${selector !== SELECTOR_TYPES[1] ? 'opacity-50' : 'opacity-100'} transition ease-in-out duration-300 hover:text-configuration-buttons hover:opacity-100`}>
         <button
           className={`flex gap-1 justify-center items-center outline-none border-none middle none center flex items-center justify-center rounded-lg p-1 transition-all`}
           data-ripple-light="true"
