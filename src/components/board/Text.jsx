@@ -1,6 +1,5 @@
-import { useEffect, useContext, useRef } from 'react'
+import { useEffect, useContext, useRef, useState } from 'react'
 import { BoardContext } from './Board'
-import wordsList from './../../assets/words/words.json'
 import RestartButton from './../../assets/icons/restart.svg'
 
 const Text = props => {
@@ -8,14 +7,13 @@ const Text = props => {
   const $input = useRef(null)
   const { isGameOver, setGameOver } = useContext(BoardContext)
   const { isNewGame, setNewGame } = useContext(BoardContext)
-  const { keysCounter, setKeysCounter } = useContext(BoardContext)
-  const { keysErrors, setKeysErrors } = useContext(BoardContext)
-  const { currentTime, setCurrentTime } = useContext(BoardContext)
-  const { initialTime } = useContext(BoardContext)
-  const { paragraph, wordsNumber } = useContext(BoardContext)
+  const { paragraph, newText, initialTime, setFinalValues, wordsNumber } = useContext(BoardContext)
+  const [currentTime, setCurrentTime] = useState(initialTime)
+  const [keysCounter, setKeysCounter] = useState(0)
+  const [keysErrors, setKeysErrors] = useState(0)
+  
 
   useEffect(() => {
-    $input.current = document.querySelector('#input')
     if(isNewGame) {
       startGame()
     }
@@ -27,15 +25,27 @@ const Text = props => {
       setCurrentTime(currentTime -1);
     }, 1000)
 
-    if(currentTime === 0) {
-      clearInterval(interval);
-      setGameOver(true);
+    if(currentTime === 0 || isGameOver) {
+      gameOver(interval);
     }
 
     return () => {
       clearInterval(interval)
     }
   }, [currentTime])
+
+  const gameOver = (interval) => {
+    setFinalValues({
+      'keysErrors':keysErrors, 
+      'keysCounter':keysCounter, 
+      'initialTime':initialTime, 
+      'lastTime': currentTime,
+      'writedWords': document.querySelectorAll('.complete-word').length,
+      'totalWords':wordsNumber,
+    });  
+      clearInterval(interval);
+      setGameOver(true);
+  }
 
   const onKeyUp = event => {
     const { key } = event
@@ -82,13 +92,15 @@ const Text = props => {
       const word = $currentWord.innerText
       if (word !== $input.current.value) {
         $currentWord.classList.add('missed-word')
+      }else{
+        $currentWord.classList.add('complete-word')
       }
       $input.current.value = ''
 
       //Go to next word
       const $nextWord = $currentWord.nextElementSibling
       if (!$nextWord) {
-        setGameOver(true)
+        gameOver()
         return
       }
       const $nextLetter = $nextWord.querySelector('.letter')
@@ -126,15 +138,8 @@ const Text = props => {
     }
   }
 
-  const newText = () => {
-    paragraph.current = wordsList.words
-      .toSorted(() => Math.random() - 0.5)
-      .slice(0, wordsNumber)
-      .join(' ')
-  }
-
   const startGame = () => {
-    newText()
+    paragraph.current = newText()
     //CLEAN INPUT
     $input.current.value = '';
     $input.current.focus();
@@ -142,6 +147,7 @@ const Text = props => {
     const $word = document.querySelectorAll('.word')
     $word.forEach(word => {
       word.classList.remove('missed-word')
+      word.classList.remove('complete-word')
       word.querySelectorAll('.letter').forEach(letter => letter.classList.remove('letter-done', 'letter-wrong', 'active', 'is-last'))
     })
     // START
@@ -155,20 +161,24 @@ const Text = props => {
     setCurrentTime(initialTime)
   }
 
+  const focusInput = () => {
+    if($input) $input.current.focus();
+  }
+
   return (
-    <div className='text-wrapper'>
-      <div className='counters'>
-        <div>
+    <div className=''>
+      <div className='counters text-3xl flex justify-around sm:justify-between'>
+        <div className='text-configuration-buttons'>
           <time>{currentTime}</time>
         </div>
-        <div className='word-counters'>
-          <div id='key-counter'>{keysCounter}</div>
-          <div id='errors-counter'>{keysErrors}</div>
+        <div className='flex gap-x-3'>
+          <div className='text-green-600' id='key-counter'>{keysCounter}</div>
+          <div className='text-red-600' id='errors-counter'>{keysErrors}</div>
         </div>
       </div>
 
-      <div id='text'>
-        {paragraph.current.split(' ').map((word, index) => {
+      <div onClick={focusInput} id='text'>
+        { paragraph.current ? paragraph.current.split(' ').map((word, index) => {
           return (
             <span className='word' key={index}>
               {word.split('').map((letter, index) => {
@@ -180,7 +190,7 @@ const Text = props => {
               })}
             </span>
           )
-        })}
+        }):<></>}
       </div>
       <div className='restart-wrapper'>
           <div className='restart-button'>
@@ -196,7 +206,8 @@ const Text = props => {
         id='input'
         autoFocus
         readOnly={isGameOver ? true : false}
-        autocomplete="one-time-code"
+        autoComplete="one-time-code"
+        ref={$input}
       />
     </div>
   )

@@ -3,7 +3,7 @@ import Navigation from './components/navbar/navigation'
 
 function App () {
   return (
-    <main className='App'>
+    <main className='w-full p-3 sm:w-3/4 grid gap-y-10 '>
       <Navigation />
       <Board />
     </main>

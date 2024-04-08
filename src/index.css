@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 :root {
   --gray: #50514f;
   --red: #f25f5c;
@@ -7,7 +11,7 @@
   --letter-done: #04724d;
   --letter-wrong: #9e2a2b;
   --configuration: #363635;
-  --configuration-buttons: #a5a3a3;
+  --configuration-buttons: #D7D7D3;
 }
 
 body {
@@ -27,67 +31,25 @@ body {
 }
 
 #root {
-  width: 100%;
+  width: 100vw;
   display: flex;
   justify-content: center;
 }
 
-.App {
-  width: 75%;
-}
-
-.menu {
-  color: lightgray;
-  margin-bottom: 5vh;
-  padding: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.configuration-bar {
-  margin-bottom: 5vh;
-  background-color: var(--configuration);
-  border-radius: 10px;
-  padding: 5px 10px 5px 20px;
-  display: flex;
-  justify-content: space-between;
-  -webkit-box-shadow: 0px 5px 10px 0px rgba(54, 54, 53, 1);
-  -moz-box-shadow: 0px 5px 10px 0px rgba(54, 54, 53, 1);
-  box-shadow: 0px 5px 10px 0px rgba(54, 54, 53, 1);
-}
-
-.configuration-bar-buttons{
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	color: grey;
-	font-weight: bold;
-	gap: 10px;
-}
-
-.configuration-bar-buttons-button {
-  background: none;
-  border: none;
-  cursor: pointer;
-  opacity: 70%;
-  transition: 0.3s ease-in;
-  &.configuration-bar-buttons-button:hover {
-    transform: scale(1.1);
-    opacity: 100%;
-  }
-}
-
 #game {
-  width: 75%;
   margin: auto;
+  font-family: "Noto Sans Mono", monospace;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  font-variation-settings:
+    "wdth" 100;
 }
 
 #text {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  font-family: 'Courier New', Courier, monospace !important;
 }
 
 #input {
@@ -95,29 +57,6 @@ body {
   left: 0;
   top:0;
   opacity: 0;
-}
-
-.counters {
-  display: flex;
-  font-size: 32px;
-  justify-content: space-between;
-}
-
-.counters time{
-  color: var(--configuration-buttons);
-}
-
-.word-counters{
-	display: flex;
-	gap: 10px;
-}
-
-#key-counter {
-  color: var(--green);
-}
-
-#errors-counter {
-  color: var(--letter-wrong);
 }
 
 .letter-done {
