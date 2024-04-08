@@ -24,9 +24,7 @@ function ConfigurationBar () {
   const changeSelector = (sel) => {
     setSelector(sel);
   }
-
-  console.log(selector);
-
+  
   return (
     <div className='w-full sm:w-3/4 lg:w-8/12 flex justify-center gap-2 p-2 bg-configuration-back text-configuration-buttons rounded-xl shadow m-auto'>
       <div className={`${selector !== SELECTOR_TYPES[0] ? 'opacity-50' : 'opacity-100'} transition ease-in-out duration-300 hover:text-configuration-buttons hover:opacity-100`}>

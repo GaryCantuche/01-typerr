@@ -71,10 +71,10 @@ const Text = props => {
     })
 
     $letter.classList.remove('active', 'is-last')
-    if ($letters[$input.current.value.length]) {
+    if($input.current.value.length === $letters.length){
+      $letters[$input.current.value.length - 1].classList.add('active', 'is-last')
+    }else{
       $letters[$input.current.value.length].classList.add('active')
-    } else {
-      $letter.classList.add('active', 'is-last')
     }
   }
 
@@ -165,8 +165,10 @@ const Text = props => {
     if($input) $input.current.focus();
   }
 
+  //console.log('Hola');
+
   return (
-    <div className=''>
+    <div className='p-2'>
       <div className='counters text-3xl flex justify-around sm:justify-between'>
         <div className='text-configuration-buttons'>
           <time>{currentTime}</time>
